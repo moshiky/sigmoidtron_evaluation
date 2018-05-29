@@ -25,7 +25,8 @@ class DictTools(object):
                 plotted = True
                 list_sum = sum(values_dict[key])
                 list_len = len(values_dict[key])
-                logger.log('{key} : {avg_value}'.format(key=key, avg_value=list_sum / list_len))
+                logger.log('{key} : {avg_value} [{num_values} values]'.format(
+                    num_values=list_len, key=key, avg_value=list_sum / list_len))
 
                 plt.subplot(100 + 10 * total_keys + key_idx + 1)
                 plt.hist(values_dict[key], bins=100, log=True)

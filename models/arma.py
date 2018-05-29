@@ -76,7 +76,7 @@ class ARMAModel(object):
             raise Exception('No settings worked')
 
         self.__model = model_fit
-        self.__logger.log(self.__model.params)
+        # self.__logger.log(self.__model.params)
 
     def get_fitted_values(self):
         return self.__model.fittedvalues

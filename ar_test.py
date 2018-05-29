@@ -6,6 +6,7 @@ from utils.logger import Logger
 from utils.dataset_utils import DatasetUtils
 from utils.error_metrics import ErrorMetrics
 from utils.dict_tools import DictTools
+from utils.timer import Timer
 from models.arma import ARMAModel
 
 
@@ -21,23 +22,33 @@ def main(dataset):
 
     # iterate all samples
     all_error_metrics = dict()
-    for sample in dataset:
-        # train AR model
-        model = ARMAModel(logger, sample, p=1, q=0, with_c=False)
+    timer = Timer()
+    for sample_idx, sample in enumerate(dataset):
+        # log progress
+        if sample_idx % Config.SAMPLE_RECORD_INTERVAL == 0:
+            logger.log('sample #{sample_idx}'.format(sample_idx=sample_idx))
 
-        # predict all values
-        predictions = model.get_fitted_values()
+        try:
+            # train AR model
+            model = ARMAModel(logger, sample, p=1, q=0, with_c=False)
 
-        # # plot predictions vs. sample
-        # plt.plot(sample)
-        # plt.plot(predictions)
-        # plt.show()
+            # predict all values
+            predictions = model.get_fitted_values()
 
-        # get error metrics
-        error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
-        DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
+            # # plot predictions vs. sample
+            # plt.plot(sample)
+            # plt.plot(predictions)
+            # plt.show()
+
+            # get error metrics
+            error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
+            DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
+
+        except Exception as ex:
+            logger.log('failed to fit sample #{sample_idx}. error: {ex}'.format(sample_idx=sample_idx, ex=ex))
 
     # log error metrics' average
+    logger.log('total time: {time_passed}'.format(time_passed=timer.get_passed_time()))
     DictTools.log_dict_avg_sorted(logger, all_error_metrics)
 
 
@@ -46,7 +57,7 @@ def get_dataset():
     dataset = \
         DatasetUtils.parse_csv(
             Config.DATASET_FILE_PATH,
-            should_shuffle=True,
+            should_shuffle=False,
             min_record_length=Config.MIN_RECORD_LENGTH
         )
 
