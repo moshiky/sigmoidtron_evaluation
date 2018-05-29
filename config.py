@@ -1,0 +1,6 @@
+
+class Config(object):
+
+    DATASET_FILE_PATH = r'C:/git/time_series_predictors/datasets/author_h_index.csv'
+    MIN_RECORD_LENGTH = 25
+
