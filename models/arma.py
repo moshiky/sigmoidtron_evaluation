@@ -25,7 +25,7 @@ class ARMAModel(object):
         # set trend setting
         self.__trend = 'c' if with_c else 'nc'
 
-        # init empty members
+        # init train data members
         self.__train_set = train_set
         self.__model = None
 
