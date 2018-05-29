@@ -30,7 +30,7 @@ def main(dataset):
 
         try:
             # train AR model
-            model = ExponentialSmoothingModel(logger, sample, p=1, alpha=0.6)
+            model = ExponentialSmoothingModel(logger, sample, p=1, alpha=1.0)
 
             # predict all values
             predictions = model.get_fitted_values()
