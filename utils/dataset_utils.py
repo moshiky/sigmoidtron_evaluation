@@ -1,4 +1,5 @@
 
+import numpy as np
 import csv
 import random
 
@@ -38,3 +39,16 @@ class DatasetUtils(object):
             random.shuffle(record_list)
 
         return record_list
+
+    @staticmethod
+    def transform_sample_to_range(sample, x_range, y_range):
+        # calculate x skips
+        x_step = (x_range[1] - x_range[0]) / (len(sample) - 1.0)
+        x_t_list = np.arange(start=x_range[0], stop=x_range[1]+x_step, step=x_step)
+
+        # calculate new y values
+        for value_idx in np.arange(len(sample)):
+            sample[value_idx] = (sample[value_idx] - y_range[0]) / (y_range[1] - y_range[0])
+
+        # return calculated values
+        return x_t_list, sample

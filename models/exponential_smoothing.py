@@ -1,15 +1,12 @@
 
 import numpy as np
-from statsmodels.tsa.api import ExponentialSmoothing, SimpleExpSmoothing, Holt
+from statsmodels.tsa.api import SimpleExpSmoothing
 
 
 class ExponentialSmoothingModel(object):
 
-    def __init__(self, logger, train_set, p, alpha):
+    def __init__(self, logger, train_set, alpha):
         self.__logger = logger
-
-        # set AR component order
-        self.__p = p
 
         # set alpha
         self.__alpha = alpha

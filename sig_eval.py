@@ -7,7 +7,8 @@ from utils.dataset_utils import DatasetUtils
 from utils.error_metrics import ErrorMetrics
 from utils.dict_tools import DictTools
 from utils.timer import Timer
-from models.exponential_smoothing import ExponentialSmoothingModel
+from models.sigmoidtron import SigmoidtronModel
+from models.sigmoid_logics.sig_logic_v1 import SigmoidLogicV1
 
 
 def main(dataset):
@@ -18,7 +19,7 @@ def main(dataset):
     """
     # create logger
     logger = Logger()
-    logger.log('ES evaluation begin')
+    logger.log('Sigmoidtron evaluation begin')
 
     # iterate all samples
     all_error_metrics = dict()
@@ -28,17 +29,26 @@ def main(dataset):
         if sample_idx % Config.SAMPLE_RECORD_INTERVAL == 0:
             logger.log('sample #{sample_idx}'.format(sample_idx=sample_idx))
 
+        # project sample to x in [-1, 1] and y in [-1, 1]
+        x_t_values, transformed_sample = \
+            DatasetUtils.transform_sample_to_range(sample, x_range=[-1.0, 1.0], y_range=[-1.0, 1.0])
+
         try:
             # train AR model
-            model = ExponentialSmoothingModel(logger, sample, alpha=1.0)
+            model = SigmoidtronModel(logger, SigmoidLogicV1(Config.LEARNING_RATE))
 
             # predict all values
-            predictions = model.get_fitted_values()
+            predictions = list()
+            for in_sample_idx in range(len(sample)):
+                x_t = x_t_values[in_sample_idx]
+                model_prediction = model.get_prediction(x_t)
+                predictions.append(model_prediction)
+                model.update_params(transformed_sample[in_sample_idx], x_t)
 
-            # # plot predictions vs. sample
-            # plt.plot(sample)
-            # plt.plot(predictions)
-            # plt.show()
+            # plot predictions vs. sample
+            plt.plot(sample)
+            plt.plot(predictions)
+            plt.show()
 
             # get error metrics
             error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
