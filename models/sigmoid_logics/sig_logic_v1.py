@@ -53,6 +53,7 @@ class SigmoidLogicV1(object):
 
             # apply gradient clipping
             grad_size = np.sqrt(np.sum(np.square(grads)))
+            print(grad_size)
             if grad_size > Config.MAX_GRADIENT_SIZE:
                 clip_factor = Config.MAX_GRADIENT_SIZE / grad_size
                 grads *= clip_factor

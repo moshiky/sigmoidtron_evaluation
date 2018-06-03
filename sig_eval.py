@@ -31,7 +31,7 @@ def main(dataset):
 
         # project sample to x in [-1, 1] and y in [-1, 1]
         x_t_values, transformed_sample = \
-            DatasetUtils.transform_sample_to_range(sample, x_range=[-1.0, 1.0], y_range=[-1.0, 1.0])
+            DatasetUtils.transform_sample_to_range(list(sample), x_range=[-1.0, 1.0], y_range=[-1.0, 1.0])
 
         try:
             # train AR model

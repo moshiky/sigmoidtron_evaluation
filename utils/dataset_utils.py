@@ -47,8 +47,10 @@ class DatasetUtils(object):
         x_t_list = np.arange(start=x_range[0], stop=x_range[1]+x_step, step=x_step)
 
         # calculate new y values
+        org_range_min, org_range_max = np.min(sample), np.max(sample)
         for value_idx in np.arange(len(sample)):
-            sample[value_idx] = (sample[value_idx] - y_range[0]) / (y_range[1] - y_range[0])
+            value_relative_location = (sample[value_idx] - org_range_min) / (org_range_max - org_range_min)
+            sample[value_idx] = y_range[0] + value_relative_location * (y_range[1] - y_range[0])
 
         # return calculated values
         return x_t_list, sample
