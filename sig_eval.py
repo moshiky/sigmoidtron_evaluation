@@ -31,7 +31,7 @@ def main(dataset):
 
         # project sample to x in [-1, 1] and y in [-1, 1]
         x_t_values, transformed_sample = \
-            DatasetUtils.transform_sample_to_range(list(sample), x_range=[-1.0, 1.0], y_range=[-1.0, 1.0])
+            DatasetUtils.transform_sample_to_range(list(sample), x_range=[0.1, 1.1], y_range=[0.1, 1.1])
 
         try:
             # train AR model
@@ -39,19 +39,19 @@ def main(dataset):
 
             # predict all values
             predictions = list()
-            for in_sample_idx in range(len(sample)):
+            for in_sample_idx in range(len(transformed_sample)):
                 x_t = x_t_values[in_sample_idx]
                 model_prediction = model.get_prediction(x_t)
                 predictions.append(model_prediction)
                 model.update_params(transformed_sample[in_sample_idx], x_t)
 
             # plot predictions vs. sample
-            plt.plot(sample)
+            plt.plot(transformed_sample)
             plt.plot(predictions)
             plt.show()
 
             # get error metrics
-            error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
+            error_metrics = ErrorMetrics.get_all_metrics(transformed_sample, predictions)
             DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
 
         except Exception as ex:

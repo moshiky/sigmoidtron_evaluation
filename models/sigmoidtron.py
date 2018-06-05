@@ -8,7 +8,7 @@ class SigmoidtronModel(object):
         self.__logic_class = logic_class
 
         # init params vector
-        self.__params = logic_class.get_initial_params()
+        self.__params = logic_class.get_initial_params(randomize=False)
 
     def get_prediction(self, x_t):
         # use logic class to generate prediction

@@ -31,10 +31,16 @@ class SigmoidLogicV1(object):
         self.__steps = 1
 
     @staticmethod
-    def get_initial_params():
-        a_param = NumpyUtils.random_number_in_range(SigmoidLogicV1.MIN_RANDOM, SigmoidLogicV1.MAX_RANDOM)
-        b_param = NumpyUtils.random_number_in_range(SigmoidLogicV1.MIN_RANDOM, 0.0 - SigmoidLogicV1.EPSILON)
-        c_param = NumpyUtils.random_number_in_range(SigmoidLogicV1.MIN_RANDOM, SigmoidLogicV1.MAX_RANDOM)
+    def get_initial_params(randomize=True):
+        if randomize:
+            a_param = NumpyUtils.random_number_in_range(SigmoidLogicV1.MIN_RANDOM, SigmoidLogicV1.MAX_RANDOM)
+            b_param = NumpyUtils.random_number_in_range(SigmoidLogicV1.MIN_RANDOM, 0.0 - SigmoidLogicV1.EPSILON)
+            c_param = NumpyUtils.random_number_in_range(SigmoidLogicV1.MIN_RANDOM, SigmoidLogicV1.MAX_RANDOM)
+        else:
+            a_param = (1/0.1) - np.exp(-0.1*0.1 + 1)
+            b_param = -0.1
+            c_param = 1.0
+
         return np.array([a_param, b_param, c_param])
 
     @staticmethod
@@ -46,24 +52,30 @@ class SigmoidLogicV1(object):
         return 1.0 / (a_param + np.exp(b_param * x_t + c_param))
 
     def update(self, params, y_t, x_t):
-        print(params)
         for i in range(1):
+        # last_loss = self.loss(params, y_t, x_t)
+        # while last_loss > 0.01:
+        #     print(last_loss)
             # get gradients
             grads = self.__get_gradients(params, y_t, x_t)
+            print(grads)
 
             # apply gradient clipping
-            grad_size = np.sqrt(np.sum(np.square(grads)))
-            print(grad_size)
-            if grad_size > Config.MAX_GRADIENT_SIZE:
-                clip_factor = Config.MAX_GRADIENT_SIZE / grad_size
-                grads *= clip_factor
+            # grad_size = np.sqrt(np.sum(np.square(grads)))
+            # print(grad_size)
+
+            # if grad_size > Config.MAX_GRADIENT_SIZE:
+            #     clip_factor = Config.MAX_GRADIENT_SIZE / grad_size
+            #     grads *= clip_factor
 
             # apply gradients to params vector
-            params -= (self.__learning_rate / np.sqrt(self.__steps)) * grads
+            params -= (1000/np.sqrt(self.__steps)) * grads
             self.__steps += 1
+            # print('y={y_t} : p={pred}'.format(y_t=y_t, pred=self.predict(params, x_t)))
 
-            # apply projection
-            self.__project(params)
+            # # apply projection
+            # self.__project(params)
+            # last_loss = self.loss(params, y_t, x_t)
 
     @staticmethod
     def __project(params):

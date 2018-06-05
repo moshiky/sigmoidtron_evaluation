@@ -6,4 +6,4 @@ class Config(object):
     SAMPLE_RECORD_INTERVAL = 100
 
     LEARNING_RATE = 1e-2
-    MAX_GRADIENT_SIZE = 10.0
+    MAX_GRADIENT_SIZE = 1000.0
