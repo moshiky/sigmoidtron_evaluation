@@ -1,6 +1,7 @@
 
 import numpy as np
 
+from config import Config
 from utils.numpy_utils import NumpyUtils
 
 
@@ -30,20 +31,20 @@ class SigmoidLogic(object):
         self.__steps = 1
 
     @staticmethod
-    def get_initial_params(randomize=True):
-        if randomize:
+    def get_initial_params(first_observation=None, x0=1):
+        if first_observation is None:
             a_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, SigmoidLogic.MAX_RANDOM)
             b_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, SigmoidLogic.MAX_RANDOM)
             c_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, SigmoidLogic.MAX_RANDOM)
             d_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, SigmoidLogic.MAX_RANDOM)
             f_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, SigmoidLogic.MAX_RANDOM)
         else:
-            a_param = -1
-            b_param = 2
-            d_param = -0.001
-            f_param = 1
+            a_param = -0.5
+            b_param = 0.9
+            d_param = -0.2
+            f_param = 0.4
 
-            c_param = (b_param / -9) - np.exp(1.001)
+            c_param = (b_param / (first_observation - a_param)) - np.exp(d_param * x0 + f_param)
 
         return np.array([a_param, b_param, c_param, d_param, f_param])
 
@@ -57,10 +58,16 @@ class SigmoidLogic(object):
         return a_param + b_param / (c_param + exp)
 
     def update(self, params, y_t, x_t):
-        for i in range(1):
+        rounds = 10
+        for i in range(rounds):
             # get gradients
-            grads = self.__get_gradients(params, y_t, x_t)
-            # print(NumpyUtils.get_vector_size(grads), grads)
+            y_factor = 1 + (0.2 / (int(self.__steps / rounds) + 1))
+            grads = self.__get_gradients(params, y_t * y_factor, x_t)
+
+            # grad_size = NumpyUtils.get_vector_size(grads)
+            # if grad_size > Config.MAX_GRADIENT_SIZE:
+            #     clip_factor = Config.MAX_GRADIENT_SIZE / grad_size
+            #     grads *= clip_factor
 
             # apply gradients to params vector
             params -= (self.__learning_rate / np.sqrt(self.__steps)) * grads

@@ -1,14 +1,14 @@
 
 class SigmoidtronModel(object):
 
-    def __init__(self, logger, logic_class):
+    def __init__(self, logger, first_observation, logic_class):
         self.__logger = logger
 
         # store logic class
         self.__logic_class = logic_class
 
         # init params vector
-        self.__params = logic_class.get_initial_params(randomize=False)
+        self.__params = logic_class.get_initial_params(first_observation=first_observation)
 
     def get_prediction(self, x_t):
         # use logic class to generate prediction
