@@ -1,5 +1,6 @@
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 from config import Config
 from utils.logger import Logger
@@ -8,7 +9,7 @@ from utils.error_metrics import ErrorMetrics
 from utils.dict_tools import DictTools
 from utils.timer import Timer
 from models.sigmoidtron import SigmoidtronModel
-from models.sigmoid_logics.sig_logic_v1 import SigmoidLogicV1
+from models.sigmoid_logics.sig_logic_v3 import SigmoidLogic
 
 
 def main(dataset):
@@ -31,11 +32,11 @@ def main(dataset):
 
         # project sample to x in [-1, 1] and y in [-1, 1]
         x_t_values, transformed_sample = \
-            DatasetUtils.transform_sample_to_range(list(sample), x_range=[0.1, 1.1], y_range=[0.1, 1.1])
+            DatasetUtils.transform_sample_to_range(list(sample), x_range=[-10, 10], y_range=[-10, 10])
 
         try:
             # train AR model
-            model = SigmoidtronModel(logger, SigmoidLogicV1(Config.LEARNING_RATE))
+            model = SigmoidtronModel(logger, SigmoidLogic(Config.LEARNING_RATE))
 
             # predict all values
             predictions = list()
@@ -45,10 +46,10 @@ def main(dataset):
                 predictions.append(model_prediction)
                 model.update_params(transformed_sample[in_sample_idx], x_t)
 
-            # plot predictions vs. sample
-            plt.plot(transformed_sample)
-            plt.plot(predictions)
-            plt.show()
+            # # plot predictions vs. sample
+            # plt.plot(transformed_sample)
+            # plt.plot(predictions)
+            # plt.show()
 
             # get error metrics
             error_metrics = ErrorMetrics.get_all_metrics(transformed_sample, predictions)
@@ -56,6 +57,7 @@ def main(dataset):
 
         except Exception as ex:
             logger.log('failed to fit sample #{sample_idx}. error: {ex}'.format(sample_idx=sample_idx, ex=ex))
+            raise ex
 
     # log error metrics' average
     logger.log('total time: {time_passed}'.format(time_passed=timer.get_passed_time()))

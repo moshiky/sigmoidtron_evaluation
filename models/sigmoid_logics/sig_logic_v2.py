@@ -1,7 +1,6 @@
 
 import numpy as np
 
-from config import Config
 from utils.numpy_utils import NumpyUtils
 
 
@@ -37,7 +36,7 @@ class SigmoidLogic(object):
             b_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, 0.0 - SigmoidLogic.EPSILON)
             c_param = NumpyUtils.random_number_in_range(SigmoidLogic.MIN_RANDOM, SigmoidLogic.MAX_RANDOM)
         else:
-            a_param = (1/0.1) - np.exp(-0.1*0.1 + 1)
+            a_param = -1 - np.exp(0.1*10 + 1)
             b_param = -0.1
             c_param = 1.0
 
@@ -53,29 +52,13 @@ class SigmoidLogic(object):
 
     def update(self, params, y_t, x_t):
         for i in range(1):
-        # last_loss = self.loss(params, y_t, x_t)
-        # while last_loss > 0.01:
-        #     print(last_loss)
             # get gradients
             grads = self.__get_gradients(params, y_t, x_t)
-            print(grads)
-
-            # apply gradient clipping
-            # grad_size = np.sqrt(np.sum(np.square(grads)))
-            # print(grad_size)
-
-            # if grad_size > Config.MAX_GRADIENT_SIZE:
-            #     clip_factor = Config.MAX_GRADIENT_SIZE / grad_size
-            #     grads *= clip_factor
+            print(NumpyUtils.get_vector_size(grads), grads)
 
             # apply gradients to params vector
-            params -= (1000/np.sqrt(self.__steps)) * grads
-            self.__steps += 1
-            # print('y={y_t} : p={pred}'.format(y_t=y_t, pred=self.predict(params, x_t)))
-
-            # # apply projection
-            # self.__project(params)
-            # last_loss = self.loss(params, y_t, x_t)
+            params -= self.__learning_rate * grads
+            # self.__steps += 1
 
     @staticmethod
     def __project(params):
@@ -90,20 +73,18 @@ class SigmoidLogic(object):
     def __get_gradients(params, y_t, x_t):
         # extract params
         a_param, b_param, c_param = params
-
-        # calculate common elements
-        exp_part = np.exp(b_param * x_t + c_param)
-        bottom_part = np.square(a_param + exp_part)
-        loss_base = y_t - (1 / (a_param + exp_part))
+        exp = np.exp(x_t * b_param + c_param)
+        base = 2 * (y_t * exp + y_t * a_param - 1) \
+            / np.power(exp + a_param, 3)
 
         # df/da
-        df_da = (2 * loss_base) / bottom_part
+        df_da = base
 
         # df/db
-        df_db = exp_part * x_t * df_da
+        df_db = x_t * exp * base
 
         # df/dc
-        df_dc = exp_part * df_da
+        df_dc = exp * base
 
         # return gradient
         return np.array([

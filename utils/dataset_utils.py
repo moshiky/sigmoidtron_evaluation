@@ -33,7 +33,7 @@ class DatasetUtils(object):
 
         record_list = [
             [float(line_value) for line_value in line]
-            for line in file_lines if len(line) > min_record_length
+            for line in file_lines if len(line) > min_record_length and len(list(set(line))) > (min_record_length / 3)
         ]
         if should_shuffle:
             random.shuffle(record_list)

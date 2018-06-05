@@ -4,20 +4,20 @@ from sklearn.metrics import mean_squared_error
 
 
 class ErrorMetrics(object):
-    
+
     @staticmethod
     def get_all_metrics(series_a, series_b):
         r2_value = ErrorMetrics.get_r_squared_value(series_a, series_b)
         mse_value = ErrorMetrics.get_mse_value(series_a, series_b)
-        mape_value = ErrorMetrics.get_mre_value(series_a, series_b)
+        mre_value = ErrorMetrics.get_mre_value(series_a, series_b)
 
-        if r2_value < 0.1 or mse_value > 1000 or mape_value > 100:
+        if r2_value < 0.1 or mse_value > 1000 or mre_value > 100:
             raise Exception('bad prediction')
 
         return {
             'r2': r2_value,
             'mse': mse_value,
-            'mape': mape_value
+            'mre': mre_value
         }
 
     @staticmethod
