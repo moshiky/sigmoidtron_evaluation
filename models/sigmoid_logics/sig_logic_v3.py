@@ -61,7 +61,7 @@ class SigmoidLogic(object):
         rounds = 10
         for i in range(rounds):
             # get gradients
-            y_factor = 1 + (0.2 / (int(self.__steps / rounds) + 1))
+            y_factor = 1 + (0.7 / (int(self.__steps / rounds) + 1))
             grads = self.__get_gradients(params, y_t * y_factor, x_t)
 
             # grad_size = NumpyUtils.get_vector_size(grads)

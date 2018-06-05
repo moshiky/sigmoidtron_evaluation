@@ -12,12 +12,13 @@ class DictTools(object):
             target_dict[key].append(new_values_dict[key])
 
     @staticmethod
-    def log_dict_avg_sorted(logger, values_dict):
+    def log_dict_avg_sorted(logger, values_dict, should_plot=True):
 
         logger.log('-- results')
 
         total_keys = len(values_dict.keys())
-        plt.subplots(num=None, figsize=(15, 6), dpi=120, facecolor='w', edgecolor='k')
+        if should_plot:
+            plt.subplots(num=None, figsize=(15, 6), dpi=120, facecolor='w', edgecolor='k')
 
         plotted = False
         for key_idx, key in enumerate(sorted(values_dict.keys(), reverse=True)):
@@ -28,13 +29,14 @@ class DictTools(object):
                 logger.log('{key} : {avg_value} [{num_values} values]'.format(
                     num_values=list_len, key=key, avg_value=list_sum / list_len))
 
-                plt.subplot(100 + 10 * total_keys + key_idx + 1)
-                plt.hist(values_dict[key], bins=100, log=True)
-                plt.title(key)
+                if should_plot:
+                    plt.subplot(100 + 10 * total_keys + key_idx + 1)
+                    plt.hist(values_dict[key], bins=100, log=True)
+                    plt.title(key)
 
             else:
                 logger.log('{key} : {key_value}'.format(key=key, key_value=values_dict[key]))
 
-        if plotted:
+        if plotted and should_plot:
             plt.show()
 
