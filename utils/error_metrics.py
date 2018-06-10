@@ -11,8 +11,8 @@ class ErrorMetrics(object):
         mse_value = ErrorMetrics.get_mse_value(series_a, series_b)
         mre_value = ErrorMetrics.get_mre_value(series_a, series_b)
 
-        if r2_value < 0.1 or mse_value > 1000 or mre_value > 100:
-            raise Exception('bad prediction')
+        # if r2_value < 0.1 or mse_value > 1000 or mre_value > 100:
+        #     raise Exception('bad prediction')
 
         return {
             'r2': r2_value,

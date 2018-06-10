@@ -10,7 +10,7 @@ from utils.timer import Timer
 from models.arma import ARMAModel
 
 
-def main(dataset):
+def run(dataset):
     """
     K - series length
     :param dataset: list of lists. all samples. each element in base list is a list with K float elements
@@ -43,6 +43,7 @@ def main(dataset):
             # get error metrics
             error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
             DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
+            logger.log('good sample: {id}'.format(id=sample_idx))
 
         except Exception as ex:
             logger.log('failed to fit sample #{sample_idx}. error: {ex}'.format(sample_idx=sample_idx, ex=ex))
@@ -50,6 +51,9 @@ def main(dataset):
     # log error metrics' average
     logger.log('total time: {time_passed}'.format(time_passed=timer.get_passed_time()))
     DictTools.log_dict_avg_sorted(logger, all_error_metrics)
+
+    # return error metrics
+    return all_error_metrics
 
 
 def get_dataset():
@@ -70,4 +74,4 @@ def get_dataset():
 
 if __name__ == '__main__':
     # evaluate dataset
-    main(get_dataset())
+    run(get_dataset())

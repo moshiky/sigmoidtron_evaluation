@@ -12,7 +12,14 @@ class DictTools(object):
             target_dict[key].append(new_values_dict[key])
 
     @staticmethod
-    def log_dict_avg_sorted(logger, values_dict, should_plot=True):
+    def get_dict_avg(original_dict):
+        avg_dict = dict()
+        for key_name in original_dict.keys():
+            avg_dict[key_name] = sum(original_dict[key_name]) / float(len(original_dict[key_name]))
+        return avg_dict
+
+    @staticmethod
+    def log_dict_avg_sorted(logger, values_dict, should_plot=False):
 
         logger.log('-- results')
 
