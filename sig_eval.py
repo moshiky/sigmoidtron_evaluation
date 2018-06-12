@@ -29,10 +29,6 @@ def run(dataset):
         if sample_idx % Config.SAMPLE_RECORD_INTERVAL == 0:
             logger.log('sample #{sample_idx}'.format(sample_idx=sample_idx))
 
-        # # project sample to x in [-1, 1] and y in [-1, 1]
-        # x_t_values, transformed_sample = \
-        #     DatasetUtils.transform_sample_to_range(list(sample), x_range=[-10, 10], y_range=[-10, 10])
-
         try:
             # train AR model
             model = SigmoidtronModel(logger, sample[0], SigmoidLogic(Config.LEARNING_RATE))
@@ -45,15 +41,14 @@ def run(dataset):
                 predictions.append(model_prediction)
                 model.update_params(sample[in_sample_idx], x_t)
 
-            # # plot predictions vs. sample
-            # plt.plot(sample[1:])
-            # plt.plot(predictions)
-            # plt.show()
+            # plot predictions vs. sample
+            plt.plot(sample[1:])
+            plt.plot(predictions)
+            plt.show()
 
             # get error metrics
             error_metrics = ErrorMetrics.get_all_metrics(sample[1:], predictions)
             DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
-            # logger.log('good sample: {id}'.format(id=sample_idx))
 
         except Exception as ex:
             logger.log('failed to fit sample #{sample_idx}. error: {ex}'.format(sample_idx=sample_idx, ex=ex))

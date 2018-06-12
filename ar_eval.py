@@ -43,7 +43,6 @@ def run(dataset):
             # get error metrics
             error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
             DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
-            logger.log('good sample: {id}'.format(id=sample_idx))
 
         except Exception as ex:
             logger.log('failed to fit sample #{sample_idx}. error: {ex}'.format(sample_idx=sample_idx, ex=ex))

@@ -43,7 +43,7 @@ def main():
     estimator_set = [
         # ar_eval,
         # ma_eval,
-        es_eval,
+        # es_eval,
         sig_eval
     ]
 
