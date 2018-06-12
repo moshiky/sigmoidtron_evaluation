@@ -23,6 +23,7 @@ from utils.logger import Logger
 import ar_eval
 import ma_eval
 import es_eval
+import arma_eval
 import sig_eval
 
 
@@ -43,7 +44,8 @@ def main():
     estimator_set = [
         # ar_eval,
         # ma_eval,
-        # es_eval,
+        # arma_eval,    # <-- failed for all samples!
+        es_eval,
         sig_eval
     ]
 

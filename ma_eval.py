@@ -29,8 +29,10 @@ def run(dataset):
             logger.log('sample #{sample_idx}'.format(sample_idx=sample_idx))
 
         try:
+            sample_data, _ = sample
+
             # train AR model
-            model = ARMAModel(logger, sample, p=0, q=1, with_c=False)
+            model = ARMAModel(logger, sample_data, p=0, q=1, with_c=False)
 
             # predict all values
             predictions = model.get_fitted_values()
@@ -41,7 +43,7 @@ def run(dataset):
             # plt.show()
 
             # get error metrics
-            error_metrics = ErrorMetrics.get_all_metrics(sample, predictions)
+            error_metrics = ErrorMetrics.get_all_metrics(sample_data, predictions)
             DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
 
         except Exception as ex:

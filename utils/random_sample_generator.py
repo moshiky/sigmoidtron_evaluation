@@ -17,7 +17,7 @@ def get_random_sample(model_logic, params, length):
     series = list()
 
     # calculate noised predictions
-    # noise_rate = 0.001
+    max_noise_rate = 0.1
     for x_t in range(1, length + 1):
         # get clean prediction
         prediction = model_logic.predict(params, x_t)
@@ -26,6 +26,8 @@ def get_random_sample(model_logic, params, length):
         # max_noise_size = noise_rate * prediction
         # noise = 2 * np.random.random() * max_noise_size - max_noise_size
         # prediction += noise
+        noise_rate = np.random.random() * (2 * max_noise_rate)
+        prediction *= (1 - max_noise_rate + noise_rate)
 
         # store prediction
         series.append(prediction)

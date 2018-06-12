@@ -86,7 +86,7 @@ class SigmoidLogic(object):
         return a_param + b_param / (c_param + exp)
 
     def update(self, params, y_t, x_t):
-        rounds = 1
+        rounds = 5
         for i in range(rounds):
             # get gradients rounds) + 1))
             grads = self.__get_gradients(params, y_t, x_t)
