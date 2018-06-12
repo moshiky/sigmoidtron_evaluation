@@ -93,8 +93,8 @@ class SigmoidLogic(object):
             # print('grads', grads)
 
             # apply gradients to params vector
-            params -= grads * self.__learning_rate     # / np.sqrt(self.__steps)
-        self.__steps += 1
+            params -= grads * self.__learning_rate / np.log(self.__steps+1)
+            self.__steps += 1
         # self.__project(params)
         # print('params', params)
 
