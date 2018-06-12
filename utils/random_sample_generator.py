@@ -1,8 +1,8 @@
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from utils.logger import Logger
-import sigmoid_generator
 
 
 def get_random_sample(model_logic, params, length):
@@ -57,10 +57,11 @@ def get_random_dataset(model_logic, dataset_size, min_series_length, max_series_
 
         # randomize length
         series_length = np.random.randint(low=min_series_length, high=max_series_length)
-        # sigmoid_generator.plot_sigmoid(model_logic, params, series_length)
 
         # get series
         series = get_random_sample(model_logic, params, series_length)
+        # plt.plot(series)
+        # plt.show()
 
         # store sample in dataset
         dataset.append(series)

@@ -5,5 +5,5 @@ class Config(object):
     MIN_RECORD_LENGTH = 25
     SAMPLE_RECORD_INTERVAL = 100
 
-    LEARNING_RATE = 0.8
+    LEARNING_RATE = 1.1
     MAX_GRADIENT_SIZE = 20
