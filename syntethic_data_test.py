@@ -42,8 +42,8 @@ def main():
 
     # build estimator set
     estimator_set = [
-        # ar_eval,
-        # ma_eval,
+        ar_eval,
+        ma_eval,
         # arma_eval,    # <-- failed for all samples!
         es_eval,
         sig_eval
