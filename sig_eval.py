@@ -35,15 +35,17 @@ def run(dataset):
 
             # predict all values
             predictions = list()
+            print('############## new series')
             for in_sample_idx in range(1, len(sample)):
                 x_t = in_sample_idx + 1
                 model_prediction = model.get_prediction(x_t)
+                print(x_t, '-->', model_prediction)
                 predictions.append(model_prediction)
                 model.update_params(sample[in_sample_idx], x_t)
 
             # plot predictions vs. sample
-            plt.plot(sample[1:])
-            plt.plot(predictions)
+            plt.plot(range(2, len(predictions)+2), sample[1:])
+            plt.plot(range(2, len(predictions)+2), predictions)
             plt.show()
 
             # get error metrics
