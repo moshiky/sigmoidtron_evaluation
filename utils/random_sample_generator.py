@@ -64,7 +64,7 @@ def get_random_dataset(model_logic, dataset_size, min_series_length, max_series_
         # plt.show()
 
         # store sample in dataset
-        dataset.append(series)
+        dataset.append((series, params))
 
     # return dataset
     return dataset

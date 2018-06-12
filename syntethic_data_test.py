@@ -16,7 +16,7 @@ Ariel's params:
 import csv
 import time
 
-from models.sigmoid_logics.sig_logic_v4 import SigmoidLogic
+from models.sigmoid_logics.sig_logic_v5 import SigmoidLogic
 from utils import random_sample_generator
 from utils.dict_tools import DictTools
 from utils.logger import Logger

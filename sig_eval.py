@@ -8,7 +8,7 @@ from utils.error_metrics import ErrorMetrics
 from utils.dict_tools import DictTools
 from utils.timer import Timer
 from models.sigmoidtron import SigmoidtronModel
-from models.sigmoid_logics.sig_logic_v4 import SigmoidLogic
+from models.sigmoid_logics.sig_logic_v5 import SigmoidLogic
 
 
 def run(dataset):
@@ -30,26 +30,29 @@ def run(dataset):
             logger.log('sample #{sample_idx}'.format(sample_idx=sample_idx))
 
         try:
+            sample_data, original_params = sample
+
             # train AR model
-            model = SigmoidtronModel(logger, sample[0], SigmoidLogic(Config.LEARNING_RATE))
+            model = SigmoidtronModel(logger, sample_data[0], SigmoidLogic(Config.LEARNING_RATE))
 
             # predict all values
             predictions = list()
-            print('############## new series')
-            for in_sample_idx in range(1, len(sample)):
+            print('############## new series, real params: ', original_params)
+            for in_sample_idx in range(1, len(sample_data)):
                 x_t = in_sample_idx + 1
                 model_prediction = model.get_prediction(x_t)
-                print(x_t, '-->', model_prediction)
+                # print(x_t, '-->', model_prediction)
+
                 predictions.append(model_prediction)
-                model.update_params(sample[in_sample_idx], x_t)
+                model.update_params(sample_data[in_sample_idx], x_t)
 
             # plot predictions vs. sample
-            plt.plot(range(2, len(predictions)+2), sample[1:])
+            plt.plot(range(2, len(predictions)+2), sample_data[1:])
             plt.plot(range(2, len(predictions)+2), predictions)
             plt.show()
 
             # get error metrics
-            error_metrics = ErrorMetrics.get_all_metrics(sample[1:], predictions)
+            error_metrics = ErrorMetrics.get_all_metrics(sample_data[1:], predictions)
             DictTools.update_dict_with_lists(all_error_metrics, error_metrics)
 
         except Exception as ex:
