@@ -87,8 +87,10 @@ class SigmoidLogic(object):
             grads = self.__get_gradients(params, y_t, x_t)
 
             # apply gradients to params vector
-            params -= self.__learning_rate * grads
-        # self.__steps += 1
+            params -= grads * self.__learning_rate / np.sqrt(self.__steps)
+            self.__steps += 1
+            self.__project(params)
+            print(params)
 
     @staticmethod
     def __project(params):
@@ -96,6 +98,10 @@ class SigmoidLogic(object):
         a_param, b_param, c_param, d_param, f_param = params
 
         # fix c_param
+        params[2] = max(c_param, SigmoidLogic.EPSILON)
+
+        # fix d_param
+        params[3] = min(-SigmoidLogic.EPSILON, d_param)
 
     @staticmethod
     def loss(params, y_t, x_t):
