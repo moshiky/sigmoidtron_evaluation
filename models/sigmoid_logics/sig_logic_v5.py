@@ -30,7 +30,7 @@ class SigmoidLogic(object):
 
     A_RANGE = [1.0, 3.0]
     B_RANGE = [3.0, 6.0]
-    C_RANGE = [EPSILON, 1.0-EPSILON]
+    C_RANGE = [EPSILON, 1e8]
     D_RANGE = [EPSILON-1.0, -EPSILON]
 
     def __init__(self, learning_rate):
@@ -38,12 +38,14 @@ class SigmoidLogic(object):
         self.__steps = 1
 
     @staticmethod
-    def get_initial_params(first_observation=None, x0=1):
+    def get_initial_params(first_observation=None, s_point_x=None):
 
         # set first value
         if first_observation is not None:
             first_value = np.float64(first_observation)
+            x0 = 1
         else:
+            x0 = 1
             first_value = NumpyUtils.random_number_in_range(SigmoidLogic.A_RANGE[0], SigmoidLogic.A_RANGE[1])
 
         # handle a_param
@@ -61,7 +63,11 @@ class SigmoidLogic(object):
         )
 
         # calculate d_param and f_param
-        d_param = NumpyUtils.random_number_in_range(SigmoidLogic.D_RANGE[0], SigmoidLogic.D_RANGE[1])
+        if s_point_x is not None:
+            d_param = (np.log(c_param) - np.log((b_param / (first_value - a_param)) - c_param)) / (s_point_x - x0)
+
+        else:
+            d_param = NumpyUtils.random_number_in_range(SigmoidLogic.D_RANGE[0], SigmoidLogic.D_RANGE[1])
 
         # calculate f_param
         f_param = (np.log(

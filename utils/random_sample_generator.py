@@ -51,17 +51,19 @@ def get_random_dataset(model_logic, dataset_size, min_series_length, max_series_
     # build one series at a time
     for series_id in range(dataset_size):
 
-        # get random params
-        params = model_logic.get_initial_params(first_observation=None)
-        # logger.log('ser#{id} : {params}'.format(id=series_id, params=params))
-
         # randomize length
         series_length = np.random.randint(low=min_series_length, high=max_series_length)
 
+        # get random params
+        margin = 0.3
+        s_point_x = np.random.randint(low=round(series_length*margin), high=round(series_length*(1-margin)))
+        params = model_logic.get_initial_params(s_point_x=s_point_x)
+        # logger.log('ser#{id} : {params}'.format(id=series_id, params=params))
+
         # get series
         series = get_random_sample(model_logic, params, series_length)
-        # plt.plot(series)
-        # plt.show()
+        plt.plot(series)
+        plt.show()
 
         # store sample in dataset
         dataset.append((series, params))
