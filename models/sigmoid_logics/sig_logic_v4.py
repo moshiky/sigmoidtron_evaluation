@@ -81,21 +81,31 @@ class SigmoidLogic(object):
         return a_param + b_param / (c_param + exp)
 
     def update(self, params, y_t, x_t):
+        print('x', x_t)
+        print('y', y_t)
+
         rounds = 1
         for i in range(rounds):
             # get gradients rounds) + 1))
             grads = self.__get_gradients(params, y_t, x_t)
+            print('grads', grads)
 
             # apply gradients to params vector
             params -= grads * self.__learning_rate / np.sqrt(self.__steps)
             self.__steps += 1
             self.__project(params)
-            print(params)
+            print('params', params)
 
     @staticmethod
     def __project(params):
         # extract params
         a_param, b_param, c_param, d_param, f_param = params
+
+        # fix a_param
+        params[0] = max(a_param, SigmoidLogic.EPSILON)
+
+        # fix b_param
+        params[1] = max(b_param, SigmoidLogic.EPSILON)
 
         # fix c_param
         params[2] = max(c_param, SigmoidLogic.EPSILON)
@@ -114,6 +124,7 @@ class SigmoidLogic(object):
 
         # common parts
         exp = np.exp(d_param * x_t + f_param)
+        print('exp', exp)
         base = 2 * (-y_t + (b_param / (exp + c_param)) + a_param)
 
         # df/da
