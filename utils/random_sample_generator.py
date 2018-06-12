@@ -62,8 +62,8 @@ def get_random_dataset(model_logic, dataset_size, min_series_length, max_series_
 
         # get series
         series = get_random_sample(model_logic, params, series_length)
-        plt.plot(series)
-        plt.show()
+        # plt.plot(series)
+        # plt.show()
 
         # store sample in dataset
         dataset.append((series, params))

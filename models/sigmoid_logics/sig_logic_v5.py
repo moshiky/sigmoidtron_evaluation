@@ -86,20 +86,17 @@ class SigmoidLogic(object):
         return a_param + b_param / (c_param + exp)
 
     def update(self, params, y_t, x_t):
-        # print('x', x_t)
-        # print('y', y_t)
-
-        rounds = 50
+        rounds = 1
         for i in range(rounds):
             # get gradients rounds) + 1))
             grads = self.__get_gradients(params, y_t, x_t)
             # print('grads', grads)
 
             # apply gradients to params vector
-            params -= grads * self.__learning_rate / np.sqrt(self.__steps)
+            params -= grads * self.__learning_rate     # / np.sqrt(self.__steps)
         self.__steps += 1
         # self.__project(params)
-        print('params', params)
+        # print('params', params)
 
     @staticmethod
     def __project(params):
